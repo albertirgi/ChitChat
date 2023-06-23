@@ -29,11 +29,11 @@ environment:
 dependencies:
   shared_preferences: ^2.1.0
   file: ^6.0.0
-  cloud_firestore: ^3.4.0
+  cloud_firestore: ^4.8.1
   cupertino_icons: ^1.0.2
-  google_sign_in: ^5.0.0
-  firebase_auth: ^3.5.0
-  firebase_core: ^1.20.0
+  google_sign_in: ^6.1.4
+  firebase_auth: ^4.6.3
+  firebase_core: ^2.14.0
   flutter:
     sdk: flutter
   

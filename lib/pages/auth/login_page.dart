@@ -224,31 +224,36 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  Future<User?> signInWithGoogle() async {
-    try {
-      // Start the Google sign-in flow
-      final GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
+  Future<void> signInWithGoogle() async {
+  try {
+    // Start the Google sign-in flow
+    final GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
 
-      if (googleSignInAccount != null) {
-        // Obtain the Google authentication object
-        final GoogleSignInAuthentication googleAuth = await googleSignInAccount.authentication;
+    if (googleSignInAccount != null) {
+      // Obtain the Google authentication object
+      final GoogleSignInAuthentication googleAuth = await googleSignInAccount.authentication;
 
-        // Create a new credential using the Google authentication ID token
-        final AuthCredential credential = GoogleAuthProvider.credential(
-          idToken: googleAuth.idToken,
-          accessToken: googleAuth.accessToken,
-        );
+      // Create a new credential using the Google authentication ID token
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        idToken: googleAuth.idToken,
+        accessToken: googleAuth.accessToken,
+      );
 
-        // Sign in to Firebase with the Google credential
-        final UserCredential userCredential = await _auth.signInWithCredential(credential);
+      // Sign in to Firebase with the Google credential
+      final UserCredential userCredential = await _auth.signInWithCredential(credential);
 
-        // Return the user object
-        return userCredential.user;
+      // Get the user
+      final User? user = userCredential.user;
+
+      if (user != null) {
+        // Save user data to Firestore or perform any other necessary operations
+        // Redirect to the chat page
+        nextScreenReplace(context, HomePage());
       }
-    } catch (e) {
-      print('Error signing in with Google: $e');
     }
-
-    return null;
+  } catch (e) {
+    print('Error signing in with Google: $e');
   }
+}
+
 }
