@@ -1,14 +1,15 @@
 import 'package:chatapp_firebase/helper/helper_function.dart';
 import 'package:chatapp_firebase/pages/auth/login_page.dart';
+import 'package:chatapp_firebase/pages/auth/test.dart';
 import 'package:chatapp_firebase/pages/home_page.dart';
 import 'package:chatapp_firebase/shared/constants.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   if (kIsWeb) {
     await Firebase.initializeApp(
         options: FirebaseOptions(
@@ -20,17 +21,40 @@ void main() async {
     await Firebase.initializeApp();
   }
 
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider<ThemeProvider>(
+      create: (context) => ThemeProvider(),
+      child: MyApp(),
+    ),
+  );
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, _) {
+        return MaterialApp(
+          theme: themeProvider
+              .getLightTheme(), // Access the light theme from ThemeProvider
+          darkTheme: themeProvider
+              .getDarkTheme(), // Access the dark theme from ThemeProvider
+          debugShowCheckedModeBanner: false,
+          home: const AppWrapper(),
+        );
+      },
+    );
+  }
+}
+
+class AppWrapper extends StatefulWidget {
+  const AppWrapper({Key? key}) : super(key: key);
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<AppWrapper> createState() => _AppWrapperState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _AppWrapperState extends State<AppWrapper> {
   bool _isSignedIn = false;
 
   @override
@@ -51,12 +75,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-          primaryColor: Constants().primaryColor,
-          scaffoldBackgroundColor: Colors.white),
-      debugShowCheckedModeBanner: false,
-      home: _isSignedIn ? const HomePage() : const LoginPage(),
-    );
+    return _isSignedIn ? const HomePage() : const LoginPage();
   }
 }

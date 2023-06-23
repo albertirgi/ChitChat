@@ -124,8 +124,10 @@ class _LoginPageState extends State<LoginPage> {
                                     borderRadius: BorderRadius.circular(30))),
                             child: const Text(
                               "Yok ChitChat!",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold),
                             ),
                             onPressed: () {
                               login();
@@ -182,8 +184,9 @@ class _LoginPageState extends State<LoginPage> {
                           children: <TextSpan>[
                             TextSpan(
                                 text: "Daftar Yok!",
-                                style:
-                                    const TextStyle(color: Color(0xFFEB5825), fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                    color: Color(0xFFEB5825),
+                                    fontWeight: FontWeight.bold),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
                                     nextScreen(context, const RegisterPage());
@@ -225,35 +228,37 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> signInWithGoogle() async {
-  try {
-    // Start the Google sign-in flow
-    final GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
+    try {
+      // Start the Google sign-in flow
+      final GoogleSignInAccount? googleSignInAccount =
+          await _googleSignIn.signIn();
 
-    if (googleSignInAccount != null) {
-      // Obtain the Google authentication object
-      final GoogleSignInAuthentication googleAuth = await googleSignInAccount.authentication;
+      if (googleSignInAccount != null) {
+        // Obtain the Google authentication object
+        final GoogleSignInAuthentication googleAuth =
+            await googleSignInAccount.authentication;
 
-      // Create a new credential using the Google authentication ID token
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        idToken: googleAuth.idToken,
-        accessToken: googleAuth.accessToken,
-      );
+        // Create a new credential using the Google authentication ID token
+        final AuthCredential credential = GoogleAuthProvider.credential(
+          idToken: googleAuth.idToken,
+          accessToken: googleAuth.accessToken,
+        );
 
-      // Sign in to Firebase with the Google credential
-      final UserCredential userCredential = await _auth.signInWithCredential(credential);
+        // Sign in to Firebase with the Google credential
+        final UserCredential userCredential =
+            await _auth.signInWithCredential(credential);
 
-      // Get the user
-      final User? user = userCredential.user;
+        // Get the user
+        final User? user = userCredential.user;
 
-      if (user != null) {
-        // Save user data to Firestore or perform any other necessary operations
-        // Redirect to the chat page
-        nextScreenReplace(context, HomePage());
+        if (user != null) {
+          // Save user data to Firestore or perform any other necessary operations
+          // Redirect to the chat page
+          nextScreenReplace(context, HomePage());
+        }
       }
+    } catch (e) {
+      print('Error signing in with Google: $e');
     }
-  } catch (e) {
-    print('Error signing in with Google: $e');
   }
-}
-
 }
